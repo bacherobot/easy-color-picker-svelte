@@ -11,33 +11,8 @@
 	import { onMount, createEventDispatcher } from 'svelte';
 	import { browser } from '$app/environment';
 
-	let defaultcolorPalettes: string[] = [
-		'#f44336',
-		'#E91E63',
-		'#9c27b0',
-		'#673ab7',
-		'#3f51b5',
-		'#2196F3',
-		'#03a9f4',
-		'#00bcd4',
-		'#009688',
-		'#4caf50',
-		'#8bc34a',
-		'#cddc39',
-		'#ffeb3b',
-		'#ffc107',
-		'#ff9800',
-		'#ff5722',
-		'#795548',
-		'#9e9e9e',
-		'#607d8b',
-		'#ffffff',
-		'#000000'
-	];
-
 	export let color = '#0000ff';
-	export let copyString = 'Copied!';
-	export let colorPalettes: string[] = [];
+	export let copyString = 'Copié !';
 
 	const dispatch = createEventDispatcher();
 	let canvas: HTMLCanvasElement;
@@ -47,18 +22,15 @@
 	let rgba: { r: number; g: number; b: number; a: number } = { r: 255, g: 255, b: 255, a: 1 };
 	let oldColor: string;
 	let isCopied: boolean = false;
-	let palettes: string[] = [];
+	let palettes: string[] = ["#000000","#ffffff","#ff0000","#00ff00","#0000ff","#ffff00","#00ffff","#ff00ff","#6a82fb", "#1abc9c", "#16a085", "#f1c40f", "#f39c12", "#2ecc71", "#27ae60", "#e67e22", "#d35400", "#3498db", "#2980b9", "#e74c3c", "#c0392b", "#9b59b6", "#8e44ad", "#ecf0f1", "#bdc3c7", "#34495e", "#2c3e50", "#95a5a6", "#7f8c8d", "#454fbf"];
 	let offscreenGradientCanvas:any;
 
 	const KEY_COLORS = 'easy.colors.values';
-
-	$: calculatepalettes(palettes);
 
 	export function save(color: string) {
 		if (isValidHexColor(color)) {
 			setColor(color);
 			saveLocalColor(color);
-			calculatepalettes();
 			selectColor();
 		}
 	}
@@ -69,21 +41,6 @@
 		drawColor();
 		setColor(color);
 	});
-
-	function calculatepalettes(_?: string[]) {
-		palettes = [...colorPalettes.slice(0, 4), ...defaultcolorPalettes];
-		let colors: string[] = getLocalColors();
-		let array: string[] = [];
-		for (let i = 0; i < 30 - palettes.length; i++) {
-			let c = colors[i];
-			if (c) {
-				array.push(c);
-			} else {
-				array.push('#ffffff');
-			}
-		}
-		palettes = [...array, ...palettes];
-	}
 
 	function saveLocalColor(color: string) {
 		if (browser && localStorage && isValidHexColor(color)) {

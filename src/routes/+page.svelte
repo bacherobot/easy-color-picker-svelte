@@ -9,6 +9,5 @@
 
 <EasyColorPicker
 	on:color={handleColorChange}
-	rgbaFormat={false}
-	colorPalletes={['#f57f17', '#00c853', '#00bfa5', '#2962ff']}
+	colorPalettes={['#f57f17', '#00c853', '#00bfa5', '#2962ff']}
 />
