@@ -282,25 +282,6 @@
 				on:mouseup|stopPropagation|preventDefault={() => (isGradientDragging = false)}
 			/>
 		</div>
-		{#if rgbaFormat === false}
-			<div class="alpha-container">
-				<canvas
-						bind:this={alphaCanvas}
-						width="255"
-						height="20"
-						on:touchmove|stopPropagation|preventDefault={(e) => pickAlpha(e)}
-						on:touchstart|stopPropagation|preventDefault={(e) => (
-					(isAlphaDragging = true), pickAlpha(e)
-				)}
-						on:touchend|stopPropagation|preventDefault={() => (isAlphaDragging = false)}
-						on:mousemove|stopPropagation|preventDefault={(e) => pickAlpha(e)}
-						on:mousedown|stopPropagation|preventDefault={(e) => (
-					(isAlphaDragging = true), pickAlpha(e)
-				)}
-						on:mouseup|stopPropagation|preventDefault={() => (isAlphaDragging = false)}
-				/>
-			</div>
-		{/if}
 		<div class="color-container">
 			<button
 				class="color-preview"
