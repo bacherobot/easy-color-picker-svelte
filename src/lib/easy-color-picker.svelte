@@ -42,14 +42,9 @@
 
 	const dispatch = createEventDispatcher();
 	let canvas: HTMLCanvasElement;
-	let alphaCanvas: HTMLCanvasElement;
 
 	let ctx: CanvasRenderingContext2D;
-	let alphaCtx: CanvasRenderingContext2D;
-	let gradient: CanvasGradient;
-	let alphaGradient: CanvasGradient;
 	let isGradientDragging: boolean = false;
-	let isAlphaDragging: boolean = false;
 	let rgba: { r: number; g: number; b: number; a: number } = { r: 255, g: 255, b: 255, a: 1 };
 	let oldColor: string;
 	let isCopied: boolean = false;
@@ -72,9 +67,7 @@
 	onMount(() => {
 		rgba = hexToRGBA(color);
 		ctx = canvas.getContext('2d', { willReadFrequently: true }) as any;
-		alphaCtx = alphaCanvas.getContext('2d') as any;
 		drawColor();
-		drawAlphaBar();
 		setColor(color);
 	});
 
@@ -120,28 +113,6 @@
 		ctx.drawImage(offscreenGradientCanvas, 0, 0);
 	}
 
-	function drawAlphaBar() {
-		alphaCtx.clearRect(0, 0, alphaCanvas.width, alphaCanvas.height);
-
-		// draw transparent checkboard
-		let gridSize = 10;
-		const color1 = 'rgba(255, 255, 255, 1)'; // Light color
-		const color2 = 'rgba(204, 204, 204, 1)'; // Dark color
-		for (let x = 0; x < alphaCanvas.width; x += gridSize) {
-			for (let y = 0; y < alphaCanvas.height; y += gridSize) {
-				alphaCtx.fillStyle = (x / gridSize) % 2 === (y / gridSize) % 2 ? color1 : color2;
-				alphaCtx.fillRect(x, y, gridSize, gridSize);
-			}
-		}
-
-		// Draw alpga gradient
-		alphaGradient = alphaCtx.createLinearGradient(0, 0, alphaCanvas.width, 0);
-		alphaGradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
-		alphaGradient.addColorStop(1, 'rgba(255, 255, 255, 1)');
-		alphaCtx.fillStyle = alphaGradient;
-		alphaCtx.fillRect(0, 0, alphaCanvas.width, alphaCanvas.height);
-	}
-
 	function pickColor(event: any) {
 		if (!isGradientDragging && !!!event.color) return;
 		let { x, y } = getCanvasEventXY(canvas, event);
@@ -155,22 +126,6 @@
 			rgba = { ...rgba, ...{ r, g, b } };
 		}
 		drawColorSelector(x, y);
-		selectColor();
-	}
-
-	function pickAlpha(event: any) {
-		if (!isAlphaDragging && !!!event.color) return;
-		drawAlphaBar();
-		let { x, y } = getCanvasEventXY(alphaCanvas, event);
-		if (event.color) {
-			let { a } = hexToRGBA(event.color);
-			rgba.a = a;
-		} else {
-			if (x < 3) x = 0;
-			if (x > 252) x = 255;
-			rgba.a = x / 255;
-		}
-		drawAlphaSelector(x, y);
 		selectColor();
 	}
 
@@ -189,22 +144,6 @@
 			ctx.restore();
 		}
 	}
-
-	const drawAlphaSelector = (x: number = 0, y: number = 0) => {
-		if (alphaCtx) {
-			alphaCtx.save();
-			alphaCtx.shadowColor = 'gray';
-			alphaCtx.shadowBlur = 2;
-			alphaCtx.shadowOffsetX = 1;
-			alphaCtx.shadowOffsetY = 1;
-			alphaCtx.strokeStyle = '#000';
-			alphaCtx.lineWidth = 4;
-			alphaCtx.beginPath();
-			alphaCtx.arc(x, 10, 6, 0, 2 * Math.PI);
-			alphaCtx.stroke();
-			alphaCtx.restore();
-		}
-	};
 
 	function selectColor() {
 		let rgbaColor = `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
@@ -229,9 +168,8 @@
 
 	function setColor(color: string) {
 		if (color && isValidHexColor(color)) {
-			const { x, y, a } = estimateColorPosition(color);
+			const { x, y } = estimateColorPosition(color);
 			pickColor({ offsetX: x, offsetY: y, color });
-			pickAlpha({ offsetX: a * 255, offsetY: 10, color });
 		} else {
 			color = oldColor;
 		}
@@ -329,9 +267,6 @@
 		border-radius: 5px;
 	}
 
-	.alpha-container {
-		margin-top: 8px;
-	}
 	.color-container {
 		display: flex;
 		margin-top: 8px;
