@@ -11,7 +11,7 @@
 	import { onMount, createEventDispatcher } from 'svelte';
 	import { browser } from '$app/environment';
 
-	let defaultColorPalletes: string[] = [
+	let defaultcolorPalettes: string[] = [
 		'#f44336',
 		'#E91E63',
 		'#9c27b0',
@@ -36,9 +36,8 @@
 	];
 
 	export let color = '#0000ff';
-	export let rgbaFormat: boolean = false;
 	export let copyString = 'Copied!';
-	export let colorPalletes: string[] = [];
+	export let colorPalettes: string[] = [];
 
 	const dispatch = createEventDispatcher();
 	let canvas: HTMLCanvasElement;
@@ -48,18 +47,18 @@
 	let rgba: { r: number; g: number; b: number; a: number } = { r: 255, g: 255, b: 255, a: 1 };
 	let oldColor: string;
 	let isCopied: boolean = false;
-	let palletes: string[] = [];
+	let palettes: string[] = [];
 	let offscreenGradientCanvas:any;
 
 	const KEY_COLORS = 'easy.colors.values';
 
-	$: calculatePalletes(palletes);
+	$: calculatepalettes(palettes);
 
 	export function save(color: string) {
 		if (isValidHexColor(color)) {
 			setColor(color);
 			saveLocalColor(color);
-			calculatePalletes();
+			calculatepalettes();
 			selectColor();
 		}
 	}
@@ -71,11 +70,11 @@
 		setColor(color);
 	});
 
-	function calculatePalletes(_?: string[]) {
-		palletes = [...colorPalletes.slice(0, 4), ...defaultColorPalletes];
+	function calculatepalettes(_?: string[]) {
+		palettes = [...colorPalettes.slice(0, 4), ...defaultcolorPalettes];
 		let colors: string[] = getLocalColors();
 		let array: string[] = [];
-		for (let i = 0; i < 30 - palletes.length; i++) {
+		for (let i = 0; i < 30 - palettes.length; i++) {
 			let c = colors[i];
 			if (c) {
 				array.push(c);
@@ -83,7 +82,7 @@
 				array.push('#ffffff');
 			}
 		}
-		palletes = [...array, ...palletes];
+		palettes = [...array, ...palettes];
 	}
 
 	function saveLocalColor(color: string) {
@@ -146,15 +145,9 @@
 	}
 
 	function selectColor() {
-		let rgbaColor = `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
-		let hexColor = rgbaToHex(rgbaColor);
-		if (hexColor != color) {
-			color = hexColor;
-			if (rgbaFormat) {
-				dispatch('color', rgbaColor);
-			} else {
-				dispatch('color', color);
-			}
+		let hexColor = rgbaToHex(`rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`);
+		if (hexColor !== color) {
+			dispatch('color', hexColor);
 		}
 	}
 
@@ -241,8 +234,8 @@
 					/>
 				{/if}
 			</button>
-			<div class="color-palletes">
-				{#each palletes as item}
+			<div class="color-palettes">
+				{#each palettes as item}
 					<button
 						class="btn btn-sm p-0 pallete"
 						style:background-color={item}
@@ -296,7 +289,7 @@
 			text-align: center;
 		}
 	}
-	.color-palletes {
+	.color-palettes {
 		flex-grow: 1;
 		display: flex;
 		flex-wrap: wrap;
