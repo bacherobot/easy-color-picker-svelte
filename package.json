@@ -1,7 +1,7 @@
 {
-	"name": "@cloudparker/easy-color-picker-svelte",
+	"name": "@bacherobot/easy-color-picker-svelte",
 	"version": "1.2.0",
-	"author": "cloudparker.com",
+	"author": "bacherobot",
 	"license": "MIT",
 	"keywords": [
 		"svelte",

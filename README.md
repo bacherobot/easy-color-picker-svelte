@@ -4,7 +4,7 @@ Implement this simple and lightweight color picker specifically for Svelte witho
 
 # Install
 ```sh
-npm install @cloudparker/easy-color-picker-svelte --save-dev
+npm install @bacherobot/easy-color-picker-svelte --save-dev
 ```
 
 # Screenshot
@@ -14,7 +14,7 @@ npm install @cloudparker/easy-color-picker-svelte --save-dev
 # Sample
 ```html
 <script lang="ts">
-	import EasyColorPicker from '@cloudparker/easy-color-picker-svelte';
+	import EasyColorPicker from '@bacherobot/easy-color-picker-svelte';
 	const handleColor = (ev: CustomEvent) => {
 		let color = ev.detail;
 		console.log(color);
@@ -46,5 +46,5 @@ Set colors for quick access, can set max 4 colors into it.
 
 # Events
 on:color
-Tigger with the color value `rgba` or `hex` format when color chnaged.
+Trigger with the color value `rgba` or `hex` format when color chnaged.
 
